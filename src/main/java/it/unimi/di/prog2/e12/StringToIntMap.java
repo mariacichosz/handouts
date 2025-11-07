@@ -24,6 +24,7 @@ package it.unimi.di.prog2.e12;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * A map from {@link String} to {@link Integer}.
@@ -39,15 +40,36 @@ public class StringToIntMap {
 
   // Note: do not use the Map in Java Collections, the point is to implement it from scratch!
 
-
+  /** A list of values rembered by the keys */
   private ArrayList<Integer> values;
+
+  /** A list of keys present in the map */
   private ArrayList<String> keys;
 
+  /** The curent number of keys in the map */
+  int size;
+
+  /*
+   * RI:
+   * 
+   *  - keys is not null and does not contain nulls
+   *  - keys does not contain duplicates
+   *  - values is not null
+   * 
+   * AF:
+   * 
+   *  - keys contains the keys present int the map
+   *  - values contains values associated to the keys
+   *  - size specifies the current amount of (key, value) pairs present in the map
+   *  - for each 0 <= i < size keys[i] corrisponds to values[i]
+   * 
+   */
 
   /** Creates a new empty map. */
   public StringToIntMap() {
     values = new ArrayList<>();
     keys = new ArrayList<>();
+    size = 0;
   }
 
   /**
@@ -56,7 +78,7 @@ public class StringToIntMap {
    * @return the number of key-value mappings in this map.
    */
   public int size() {
-    return values.size();
+    return size;
   }
 
   /**
@@ -65,7 +87,33 @@ public class StringToIntMap {
    * @return {@code true} iff this map contains no key-value mappings.
    */
   public boolean isEmpty() {
-    return this.size() == 0;
+    return size == 0;
+  }
+
+  /**
+   * Finds the position of the key in the list.
+   * 
+   * @param key the key to search for.
+   * @return the index of the position of the {@code key} in the list if it's present; -1 if it's not.
+   */
+  private int getIndexK(String key){
+    for (int i = 0; i < size; i ++){
+      if (keys.get(i).equals(key)) return i;
+    }
+    return -1;
+  }
+
+  /**
+   * Finds the position of the value in the list.
+   * 
+   * @param value the value to search for.
+   * @return the index of the position of the {@code value} in the list if it's present; -1 if it's not.
+   */
+  private int getIndexV(int value){
+    for (int i = 0; i < size; i ++){
+      if (values.get(i) == value) return i;
+    }
+    return -1;
   }
 
   /**
@@ -75,10 +123,7 @@ public class StringToIntMap {
    * @return {@code true} iff this map contains a key-value mappings with the given {@code key}.
    */
   public boolean containsKey(String key) {
-    for (String string: keys){
-      if (string.equals(key)) return true;
-    }
-    return false;
+    return getIndexK(key) != -1;
   }
 
   /**
@@ -88,10 +133,7 @@ public class StringToIntMap {
    * @return {@code true} iff this map contains a key-value mappings with the given {@code value}.
    */
   public boolean containsValue(int value) {
-    for (int v: values){
-      if (v == value) return true;
-    }
-    return false;
+    return getIndexV(value) != -1;
   }
 
   /**
@@ -103,13 +145,9 @@ public class StringToIntMap {
    *     {@code null}.
    */
   public int get(String key) throws NoSuchElementException {
+    Objects.requireNonNull(key);
     if (!containsKey(key)) throw new NoSuchElementException();
-    int i = 0;
-    while (i < size()){
-      if (keys.get(i).equals(key)) break;
-      i ++;
-    }
-    return values.get(i);
+    return values.get(getIndexK(key));
   }
 
   /**
@@ -120,7 +158,13 @@ public class StringToIntMap {
    * @throws IllegalArgumentException if the map already contain a mapping for the key.
    * @throws NullPointerException if the key is {@code null}.
    */
-  public void put(String key, int value) {}
+  public void put(String key, int value) {
+    Objects.requireNonNull(key);
+    if (containsKey(key)) throw new IllegalArgumentException("this key already exists\n");
+    keys.add(key);
+    values.add(value);
+    size ++;
+  }
 
   /**
    * Removes the mapping for a key from this map if it is present.
@@ -130,9 +174,53 @@ public class StringToIntMap {
    *     modified by this operation.
    */
   public boolean remove(String key) {
-    return false;
+    Objects.requireNonNull(key);
+    if (!containsKey(key)) return false;
+    int i = getIndexK(key);
+    keys.remove(i);
+    values.remove(i);
+    size --;
+    return true;
   }
 
   /** Removes all of the mappings from this map. */
-  public void clear() {}
+  public void clear() {
+    keys.clear();
+    values.clear();
+    size = 0;
+  }
+
+  @Override
+  public boolean equals(Object obj){
+    if (this == obj) return true;
+    if (!(obj instanceof StringToIntMap other)) return false;
+    if (this.size != other.size) return false;
+    for (String k: this.keys){
+      if (!other.containsKey(k)) return false;
+      if (this.get(k) != other.get(k)) return false;
+    }
+    return true;
+  }
+
+  @Override
+  public int hashCode(){
+    List<String> cp = keys.subList(0, size);
+    cp.sort(null);
+    for (int i = 0; i < size; i ++){
+      cp.add(String.valueOf(get(cp.get(i))));
+    }
+    return cp.hashCode();
+  }
+
+  @Override
+  public String toString(){
+    StringBuilder sb = new StringBuilder();
+    for (String key: keys){
+      sb.append("[" + key + " : ");
+      sb.append(get(key));
+      sb.append("] ");
+    }
+    sb.append("\n");
+    return sb.toString();
+  }
 }
