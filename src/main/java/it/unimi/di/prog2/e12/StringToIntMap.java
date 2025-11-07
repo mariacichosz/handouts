@@ -21,6 +21,8 @@ along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 package it.unimi.di.prog2.e12;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -37,8 +39,16 @@ public class StringToIntMap {
 
   // Note: do not use the Map in Java Collections, the point is to implement it from scratch!
 
+
+  private ArrayList<Integer> values;
+  private ArrayList<String> keys;
+
+
   /** Creates a new empty map. */
-  public StringToIntMap() {}
+  public StringToIntMap() {
+    values = new ArrayList<>();
+    keys = new ArrayList<>();
+  }
 
   /**
    * Returns the size of this map.
@@ -46,7 +56,7 @@ public class StringToIntMap {
    * @return the number of key-value mappings in this map.
    */
   public int size() {
-    return 0;
+    return values.size();
   }
 
   /**
@@ -55,7 +65,7 @@ public class StringToIntMap {
    * @return {@code true} iff this map contains no key-value mappings.
    */
   public boolean isEmpty() {
-    return false;
+    return this.size() == 0;
   }
 
   /**
@@ -65,6 +75,9 @@ public class StringToIntMap {
    * @return {@code true} iff this map contains a key-value mappings with the given {@code key}.
    */
   public boolean containsKey(String key) {
+    for (String string: keys){
+      if (string.equals(key)) return true;
+    }
     return false;
   }
 
@@ -75,6 +88,9 @@ public class StringToIntMap {
    * @return {@code true} iff this map contains a key-value mappings with the given {@code value}.
    */
   public boolean containsValue(int value) {
+    for (int v: values){
+      if (v == value) return true;
+    }
     return false;
   }
 
@@ -87,7 +103,13 @@ public class StringToIntMap {
    *     {@code null}.
    */
   public int get(String key) throws NoSuchElementException {
-    return 0;
+    if (!containsKey(key)) throw new NoSuchElementException();
+    int i = 0;
+    while (i < size()){
+      if (keys.get(i).equals(key)) break;
+      i ++;
+    }
+    return values.get(i);
   }
 
   /**

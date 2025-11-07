@@ -21,6 +21,9 @@ along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 package it.unimi.di.prog2.e12;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * A <em>queue</em> is a mutable data structure that provides access to its elements in
  * first-in/first-out order.
@@ -39,13 +42,55 @@ public class BoundedIntQueue {
   // Collection Framework class. An array can be used to store the elements in a
   // circular buffer (see https://www.wikiwand.com/en/articles/Circular_buffer).
 
+  /** The maximum capacity of the queue. */
+  private final int capacity;
+
+  /** The number of elements currently in the queue. */
+  private int size;
+
+  /** The index that points on the head of the queue. */
+  private int first;
+
+  /** The index that points on the first empty position of the queue. */
+  private int last;
+
+  /** The elements of the queue. */
+  private int[] intQueue;
+
+  /*
+   * RI:
+   * 
+   *  - capacity >= 0
+   *  - 0 <= size <= capacity
+   *  - 0 <= first < capacity
+   *  - 0 <= last < capacity
+   *  - (capacity + last - first) % capacity == size
+   * 
+   * AF:
+   * 
+   *  - capacity is the declared maximum capacity of the queue and thus a intQueue.size()
+   *  - the elements of the queue are the integers in intQueue starting from first and ending in (last - 1)
+   *  - if (0 <= i < capacity) is the index of the j-th element of a queue in intQueue then ((i + 1) % capacity) is the index of the (j+1)-th element of the queue
+   *  - the head of the queue is in the position first of intQueue
+   *  - the last element in the queue is in the position last of intQueue
+   *  - size defines the number of elements currently in the queue
+   * 
+   */
+
   /**
    * Creates a new bounded queue with the given capacity.
    *
    * @param capacity the capacity of the queue.
    * @throws IllegalArgumentException if {@code capacity} is negative.
    */
-  public BoundedIntQueue(int capacity) {}
+  public BoundedIntQueue(int capacity) {
+    if (capacity < 0) throw new IllegalArgumentException("capacity cannot be negative\n");
+    this.capacity = capacity;
+    this.size = 0;
+    this.first = 0;
+    this.last = 0;
+    this.intQueue = new int[capacity];
+  }
 
   /**
    * Adds an element to the queue.
@@ -53,8 +98,14 @@ public class BoundedIntQueue {
    * @param x the element to add.
    * @throws IllegalStateException if the queue is full.
    */
-  public void enqueue(int x) {}
-
+  public void enqueue(int x) {
+    if (size == capacity) throw new IllegalStateException("the list is full\n");
+    intQueue[last] = x;
+    size ++;
+    last ++;
+    last %= capacity;
+  }
+  
   /**
    * Removes the element at the head of the queue.
    *
@@ -62,6 +113,52 @@ public class BoundedIntQueue {
    * @throws IllegalStateException if the queue is empty.
    */
   public int dequeue() {
-    return 0;
+    if (size == 0) throw new IllegalStateException("the queue is empty\n");
+    int x = intQueue[first];
+    first ++;
+    first %= capacity;
+    size --;
+    return x;
+  }
+
+  /**
+   * Creates a copy of a queue in which elements are shifted to their logical positions: 
+   *  ({@code first} -> 0, ..., {@code last} - 1 -> {@code size} - 1).
+   * 
+   * 
+   * @param obj the {@link BoundedIntQueue} of which copy we want to obtain.
+   * @return a {@link int[]} of lenght {@code size} containing elements at their shifted positions.
+   */
+  private int[] doCopy(BoundedIntQueue obj){
+    int []cpy = new int[obj.size];
+    for (int i = 0; i < size; i ++) cpy[i] = obj.intQueue[(i + obj.first) % capacity];
+    return cpy;
+  }
+
+  @Override
+  public int hashCode(){
+    return Arrays.hashCode(doCopy(this));
+  }
+
+  @Override
+  public boolean equals(Object obj){
+    if (this == obj) return true;
+    if (!(obj instanceof BoundedIntQueue other)) return false;
+    return (Arrays.equals(doCopy(this), doCopy(other)));
+  }
+
+  @Override
+  public String toString(){
+    return toString(doCopy(this));
+  }
+  
+  private String toString(int[] arr) {
+    StringBuilder sb = new StringBuilder("[");
+    for (int i = 0; i < arr.length; i ++) {
+      sb.append(arr[i]);
+      if (i != arr.length - 1) sb.append(", ");
+    }
+    sb.append("]\n");
+    return sb.toString();
   }
 }
