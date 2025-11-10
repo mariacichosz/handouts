@@ -22,6 +22,7 @@ along with this file.  If not, see <https://www.gnu.org/licenses/>.
 package it.unimi.di.prog2.e14;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /** Utility class with some string iterators. */
 public class StringIterators {
@@ -40,14 +41,25 @@ public class StringIterators {
 
       // EXERCISE: complete the implementation
 
+      /** The next element to be returned, or null if not yet computed */
+      private String next;
+
       @Override
       public boolean hasNext() {
-        throw new UnsupportedOperationException("Unimplemented method 'hasNext'");
+        if (next != null) return true;
+        while (it.hasNext()){
+          next = it.next();
+          if (next.length() % 2 == 0) return true;
+        }
+        return false;
       }
 
       @Override
       public String next() {
-        throw new UnsupportedOperationException("Unimplemented method 'next'");
+        if (!hasNext()) throw new NoSuchElementException();
+        String result = next;
+        next = null;
+        return result;
       }
     };
   }
@@ -63,14 +75,22 @@ public class StringIterators {
 
       // EXERCISE: complete the implementation
 
+      private String next;
+
       @Override
       public boolean hasNext() {
-        throw new UnsupportedOperationException("Unimplemented method 'hasNext'");
+        if (next != null) return true;
+        if (!it.hasNext()) return false;
+        next = it.next().toUpperCase(); 
+        return true;
       }
 
       @Override
       public String next() {
-        throw new UnsupportedOperationException("Unimplemented method 'next'");
+        if (!hasNext()) throw new NoSuchElementException();
+        String result = next;
+        next = null;
+        return result;
       }
     };
   }
