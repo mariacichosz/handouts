@@ -24,12 +24,13 @@ package it.unimi.di.prog2.h13;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.StringJoiner;
 
 /**
  * {@code ArrayIntSet}s are mutable, unbounded sets of integers.
  *
- * <p>A typical IntSet is \( S = \{x_1, \ldots, x_n \} \).
+ * <p>A typical ArrayIntSet is \( S = \{x_1, \ldots, x_n \} \).
  */
 public class ArrayIntSet implements Iterable<Integer> {
 
@@ -139,10 +140,10 @@ public class ArrayIntSet implements Iterable<Integer> {
    * Returns an element from this set.
    *
    * @return an arbitrary element from this set.
-   * @throws IllegalStateException if this set is empty.
+   * @throws NoSuchElementException if this set is empty.
    */
-  public int choose() throws IllegalStateException {
-    if (size == 0) throw new IllegalStateException("Can't choose from an empty set");
+  public int choose() throws NoSuchElementException {
+    if (size == 0) throw new NoSuchElementException("Can't choose from an empty set");
     return els[0];
   }
 

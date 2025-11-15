@@ -23,11 +23,12 @@ package it.unimi.di.prog2.h10;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * {@code ListIntSet}s are mutable, unbounded sets of integers.
  *
- * <p>A typical IntSet is \( S = \{x_1, \ldots, x_n \} \).
+ * <p>A typical ListIntSet is \( S = \{x_1, \ldots, x_n \} \).
  */
 public class ListIntSet {
 
@@ -126,10 +127,10 @@ public class ListIntSet {
    * Returns an element from this set.
    *
    * @return an arbitrary element from this set.
-   * @throws IllegalStateException if this set is empty.
+   * @throws NoSuchElementException if this set is empty.
    */
-  public int choose() throws IllegalStateException {
-    if (els.isEmpty()) throw new IllegalStateException("Can't choose from an empty set");
+  public int choose() throws NoSuchElementException {
+    if (els.isEmpty()) throw new NoSuchElementException("Can't choose from an empty set");
     return els.get(els.size() - 1);
   }
 }

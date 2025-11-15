@@ -1,5 +1,5 @@
 /**
- * Codice relativo alla lezione 14 per maggiori dettagli si veda il <a
+ * Materiale relativo alla lezione 14 per maggiori dettagli si veda il <a
  * href="https://prog2.di.unimi.it/diario">diario del corso</a>.
  *
  * <p>In this package there are several variants of a {@link DecimalDigits}, a class that can be

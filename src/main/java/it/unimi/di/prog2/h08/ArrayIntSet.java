@@ -23,11 +23,12 @@ package it.unimi.di.prog2.h08;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
- * {@code IntSet}s are mutable, unbounded sets of integers.
+ * {@code ArrayIntSet}s are mutable, unbounded sets of integers.
  *
- * <p>A typical IntSet is \( S = \{x_1, \ldots, x_n \} \).
+ * <p>A typical ArrayIntSet is \( S = \{x_1, \ldots, x_n \} \).
  */
 public class ArrayIntSet {
 
@@ -123,10 +124,10 @@ public class ArrayIntSet {
    * Returns an element from this set.
    *
    * @return an arbitrary element from this set.
-   * @throws IllegalStateException if this set is empty.
+   * @throws NoSuchElementException if this set is empty.
    */
-  public int choose() throws IllegalStateException {
-    if (size == 0) throw new IllegalStateException("Can't choose from an empty set");
+  public int choose() throws NoSuchElementException {
+    if (size == 0) throw new NoSuchElementException("Can't choose from an empty set");
     return els[0];
   }
 }

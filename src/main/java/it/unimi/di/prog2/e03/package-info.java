@@ -1,5 +1,5 @@
 /**
- * Codice relativo agli esercizi assegnati nella lezione 03, per maggiori dettagli si veda il <a
+ * Esercizi assegnati nella lezione 3, per maggiori dettagli si veda il <a
  * href="https://prog2.di.unimi.it/diario">diario del corso</a>.
  */
 package it.unimi.di.prog2.e03;
