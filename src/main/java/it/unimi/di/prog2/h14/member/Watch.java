@@ -21,6 +21,7 @@ along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 package it.unimi.di.prog2.h14.member;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -101,8 +102,7 @@ public class Watch implements Iterable<Watch.Gear> {
 
   @Override
   public Iterator<Gear> iterator() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'iterator'");
+    return Collections.unmodifiableCollection(gears).iterator();
   }
 
   @Override

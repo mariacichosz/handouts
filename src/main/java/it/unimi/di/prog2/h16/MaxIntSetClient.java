@@ -19,7 +19,7 @@ along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-package it.unimi.di.prog2.h15;
+package it.unimi.di.prog2.h16;
 
 import java.util.Scanner;
 
